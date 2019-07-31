@@ -89,6 +89,7 @@ BufferLoader.prototype.load = function() {
  * sets up most of the configuration for the sound analysis
  * and then loads the sound using loadSounds.
  * Once finished loading, the setupVisual callback is called.
+ * If useAudioBuffer is set in options, its value (as an AudioBuffer) is used, instead of loading from filename.
  * @param {String} filename - takes a filename
  * @param {String} selector - id to use to figure out where to display
  * @param {Object} options - Options default is {}
@@ -145,9 +146,16 @@ function Spectrogram(filename, selector, options = {}) {
     this.curSec = 0;
     this.maxCount = 0;
 
-    loadSounds(this, this.context, {
-        buffer: this.filename
-    }, this.setupVisual.bind(this));
+    if (options.hasOwnProperty('useAudioBuffer')) {
+        this.buffer = options.useAudioBuffer;
+        this.setupVisual();
+    }
+    else {
+
+        loadSounds(this, this.context, {
+            buffer: this.filename
+        }, this.setupVisual.bind(this));
+    }
 }
 
 
